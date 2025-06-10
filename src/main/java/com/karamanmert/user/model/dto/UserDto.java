@@ -14,6 +14,7 @@ import java.time.LocalDate;
  */
 @Builder
 public record UserDto(
+        @JsonProperty("user_id") String userId,
         @JsonProperty("name") String name,
         @JsonProperty("surname") String surname,
         @JsonProperty("username") String username,

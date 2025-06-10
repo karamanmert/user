@@ -9,7 +9,25 @@ import lombok.Builder;
  */
 @Builder
 public record AddressDto(
-        @JsonProperty("address")
+        @JsonProperty("title")
+        String title,
+
+        @JsonProperty("city")
+        String city,
+
+        @JsonProperty("district")
+        String district,
+
+        @JsonProperty("neighborhood")
+        String neighborhood,
+
+        @JsonProperty("street")
+        String street,
+
+        @JsonProperty("address_id")
+        String addressId,
+
+        @JsonProperty("custom_address")
         String customAddress
 ) {
 }

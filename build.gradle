@@ -1,7 +1,8 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.2.2'
-	id 'io.spring.dependency-management' version '1.1.4'
+	id 'org.springframework.boot' version '3.5.0'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
 }
 
 group = 'com.karamanmert'
@@ -17,23 +18,86 @@ configurations {
 	}
 }
 
+ext {
+	set('springCloudVersion', "2025.0.0")
+}
+
 repositories {
+	mavenLocal()
 	mavenCentral()
-	maven { url 'https://repo.spring.io/milestone' }
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.mapstruct:mapstruct:1.5.4.Final'
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	implementation 'com.karamanmert:common-lib:0.0.1-SNAPSHOT'
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.4.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') {
+jacoco {
+	toolVersion = "0.8.10"
+}
+
+def exclusionList = [
+		'**/service/business/**',
+		'**/entity/**',
+		'**/model/**',
+]
+
+tasks.test {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport, jacocoTestCoverageVerification
+}
+
+tasks.jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		html.required = true
+		csv.required = false
+	}
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: exclusionList)
+		}))
+	}
+}
+
+tasks.jacocoTestCoverageVerification {
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: exclusionList)
+		}))
+	}
+	/* violationRules {
+		rule {
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0
+			}
+		}
+		// rule {
+		// 	limit {
+		// 		counter = 'BRANCH'
+		// 		value = 'COVEREDRATIO'
+		// 		minimum = 0.005
+		// 	}
+		// }
+	}
+	 */
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }

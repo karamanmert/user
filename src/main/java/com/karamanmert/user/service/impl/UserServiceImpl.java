@@ -1,9 +1,12 @@
 package com.karamanmert.user.service.impl;
 
+import com.karamanmert.common_lib.enums.ErrorCode;
 import com.karamanmert.user.entity.User;
+import com.karamanmert.user.exception.ApiException;
 import com.karamanmert.user.repository.UserRepository;
 import com.karamanmert.user.service.spec.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,18 +26,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    @Override
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
-
-    @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("no such user"));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, ErrorCode.USER_NOT_FOUND));
     }
 }

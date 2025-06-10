@@ -1,13 +1,16 @@
 package com.karamanmert.user.service.business;
 
+import com.karamanmert.user.entity.Address;
 import com.karamanmert.user.entity.User;
+import com.karamanmert.user.model.dto.AddressDto;
+import com.karamanmert.user.model.dto.GetUserInfoDto;
 import com.karamanmert.user.model.dto.UserDto;
 import com.karamanmert.user.model.request.CreateUserRequest;
-import com.karamanmert.user.service.spec.CustomUserMapper;
-import com.karamanmert.user.service.spec.UserService;
-import com.karamanmert.user.service.spec.Validator;
+import com.karamanmert.user.service.spec.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author karamanmert
@@ -20,6 +23,8 @@ public class UserBusinessService {
     private final UserService userService;
     private final Validator<User> userValidator;
     private final CustomUserMapper customUserMapper;
+    private final AddressService addressService;
+    private final CustomAddressMapper customAddressMapper;
 
     public UserDto createUser(CreateUserRequest request) {
         User user = customUserMapper.mapRequestToEntity(request);
@@ -35,5 +40,17 @@ public class UserBusinessService {
 
     public User getByEmail(String email) {
         return userService.findByEmail(email);
+    }
+
+    public GetUserInfoDto getUserInfo(String email) {
+        final User user = userService.findByEmail(email);
+        final UserDto userDto = customUserMapper.mapEntityToDto(user);
+        final List<Address> addressList = addressService.getAddressByUserId(user);
+        final List<AddressDto> addressDtos = customAddressMapper.mapEntityListToDtoList(addressList);
+
+        return GetUserInfoDto.builder()
+                .user(userDto)
+                .addresses(addressDtos)
+                .build();
     }
 }

@@ -6,14 +6,13 @@ import com.karamanmert.user.enums.UserRole;
 import com.karamanmert.user.enums.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author karamanmert
@@ -25,8 +24,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 public class User extends BaseEntity {
+
+    @Column(name = "userId", nullable = false, unique = true)
+    private String userId;
 
     @Column(name = "name", nullable = false)
     @Size(min = 2, max = 100)
@@ -39,10 +41,6 @@ public class User extends BaseEntity {
     @Column(name = "password", nullable = false)
     @Size(min = 2, max = 30)
     private String password;
-
-    @Column(name = "username", nullable = false, unique = true)
-    @Size(min = 2, max = 50)
-    private String username;
 
     @Column(name = "phone_number", nullable = false, unique = true)
     @Size(max = 10)
@@ -69,6 +67,13 @@ public class User extends BaseEntity {
     private UserRole role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // mappedBy kısmı addresste nasıl tanımladığımızdır.
-    private List<Address> addresses;
+    @Builder.Default
+    private List<Address> addresses = new ArrayList<>();
+
+    @PrePersist
+    public void onCreate() {
+        if (this.userId == null) {
+            this.userId = UUID.randomUUID().toString();
+        }
+    }
 }

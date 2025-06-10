@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   postgres:
     container_name: postgres-sql-ebook
@@ -7,8 +9,8 @@ services:
       POSTGRES_PASSWORD: password
       PGDATA: /var/lib/postgresql/data
       POSTGRES_DB: ebook
-    volumes_from:
-      - postgres:/data/postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -16,8 +18,8 @@ services:
     restart: unless-stopped
 
 networks:
-    spring-ebook:
-        driver: bridge
+  spring-ebook:
+    driver: bridge
 
 volumes:
   postgres:

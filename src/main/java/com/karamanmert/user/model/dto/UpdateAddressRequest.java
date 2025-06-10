@@ -1,13 +1,14 @@
-package com.karamanmert.user.model.request;
+package com.karamanmert.user.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 /**
  * @author karamanmert
- * @date 9.11.2024
  */
-public record CreateAddressRequest(
+@Builder
+public record UpdateAddressRequest(
         @NotBlank(message = "PARAMETER_REQUIRED")
         String city,
 

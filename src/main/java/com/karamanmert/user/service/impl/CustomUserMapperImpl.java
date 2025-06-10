@@ -23,7 +23,6 @@ public class CustomUserMapperImpl implements CustomUserMapper {
                 .name(request.name())
                 .surname(request.surname())
                 .password(request.password())
-                .username(request.username())
                 .phoneNumber(request.phoneNumber())
                 .email(request.email())
                 .dateOfBirth(request.dateOfBirth())
@@ -39,9 +38,9 @@ public class CustomUserMapperImpl implements CustomUserMapper {
             return null;
         }
         return UserDto.builder()
+                .userId(user.getUserId())
                 .name(user.getName())
                 .surname(user.getSurname())
-                .username(user.getUsername())
                 .phoneNumber(user.getPhoneNumber())
                 .email(user.getEmail())
                 .dateOfBirth(user.getDateOfBirth())

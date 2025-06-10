@@ -32,10 +32,6 @@ public record CreateUserRequest(
         String password,
 
         @NotBlank(message = "PARAMETER_REQUIRED")
-        @Size(min = 2, max = 50, message = "INVALID_LENGTH")
-        String username,
-
-        @NotBlank(message = "PARAMETER_REQUIRED")
         @Size(max = 10, message = "INVALID_LENGTH")
         String phoneNumber,
 

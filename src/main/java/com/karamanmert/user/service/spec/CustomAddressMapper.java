@@ -2,7 +2,10 @@ package com.karamanmert.user.service.spec;
 
 import com.karamanmert.user.entity.Address;
 import com.karamanmert.user.model.dto.AddressDto;
+import com.karamanmert.user.model.dto.UpdateAddressRequest;
 import com.karamanmert.user.model.request.CreateAddressRequest;
+
+import java.util.List;
 
 /**
  * @author karamanmert
@@ -10,7 +13,11 @@ import com.karamanmert.user.model.request.CreateAddressRequest;
  */
 public interface CustomAddressMapper {
 
-    Address mapCreateRequestToEntity(CreateAddressRequest createAddressRequest);
+    Address mapRequestToEntity(CreateAddressRequest request);
 
     AddressDto mapEntityToDto(Address address);
+
+    List<AddressDto> mapEntityListToDtoList(List<Address> address);
+
+    Address updateEntity(Address address, UpdateAddressRequest request);
 }

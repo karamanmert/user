@@ -21,7 +21,6 @@ public class UserValidator implements Validator<User> {
     @Override
     public void isValidForCreate(User user) {
         this.checkEmailIsUnique(user.getEmail());
-        this.checkUsernameIsUnique(user.getUsername());
     }
 
     @Override
@@ -33,13 +32,6 @@ public class UserValidator implements Validator<User> {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
             throw new RuntimeException("User not found");
-        }
-    }
-
-    private void checkUsernameIsUnique(String username) {
-        boolean exists = userRepository.existsByUsername(username);
-        if (exists) {
-            throw new RuntimeException("Username already exists");
         }
     }
 
